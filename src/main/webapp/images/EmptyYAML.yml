@@ -1,0 +1,365 @@
+## YAML Template.
+---
+PROJECT_PROGRESS.txt
+
+==========================================================
+        ROLE MANAGEMENT SYSTEM
+        Advanced Java (Servlet + JSP + PostgreSQL)
+==========================================================
+
+Project By : Raj Mehta
+
+==========================================================
+PROJECT STATUS
+==========================================================
+
+Progress : 75%
+
+Database : PostgreSQL
+Frontend : JSP + Bootstrap 5
+Backend : Java Servlet
+Architecture : MVC
+Database Connectivity : JDBC
+
+==========================================================
+COMPLETED
+==========================================================
+
+DATABASE
+---------
+
+[✓] PostgreSQL Installed
+[✓] Database Created
+[✓] Users Table Created
+
+
+CONFIG
+-------
+
+[✓] DBConnection.java
+
+
+MODEL
+------
+
+[✓] User.java
+
+
+DAO
+----
+
+[✓] UserDAO.java
+
+Methods Completed
+
+[✓] registerUser()
+[✓] login()
+[✓] getAllUsers()
+[✓] getUserById()
+[✓] updateUser()
+[✓] deleteUser()
+[✓] countUsers()
+[✓] countAdmins()
+[✓] countEmployees()
+[✓] countClients()
+[✓] changePassword()
+
+
+SERVLETS
+---------
+
+[✓] RegisterServlet.java
+
+[✓] LoginServlet.java
+
+[✓] LogoutServlet.java
+
+[✓] DashboardServlet.java
+
+[✓] DisplayUserServlet.java
+
+[✓] InsertUserServlet.java
+
+[✓] UpdateUserServlet.java
+
+[✓] DeleteUserServlet.java
+
+[✓] ProfileServlet.java
+
+[✓] ChangePasswordServlet.java
+
+
+FILTERS
+--------
+
+[✓] LoginFilter.java
+
+[✓] RoleFilter.java
+
+
+UTIL
+-----
+
+[✓] Validation.java
+
+
+JSP PAGES
+----------
+
+[✓] login.jsp
+
+[✓] register.jsp
+
+[✓] dashboard.jsp
+
+[✓] insertUser.jsp
+
+[✓] updateUser.jsp
+
+[✓] displayUsers.jsp
+
+[✓] profile.jsp
+
+[✓] changePassword.jsp
+
+[✓] navbar.jsp
+
+[✓] sidebar.jsp
+
+[✓] footer.jsp
+
+[✓] accessDenied.jsp
+
+
+CSS
+----
+
+[✓] style.css
+
+[✓] dashboard.css
+
+
+==========================================================
+NOT COMPLETED
+==========================================================
+
+DATABASE
+---------
+
+[ ] SQL Backup File (database.sql)
+
+
+SERVLET
+--------
+
+[ ] SearchUserServlet.java
+
+[ ] ExportPDFServlet.java
+
+[ ] ExportExcelServlet.java
+
+[ ] ForgotPasswordServlet.java
+
+[ ] ResetPasswordServlet.java
+
+
+DAO
+----
+
+[ ] searchUsers()
+
+[ ] getRecentUsers()
+
+[ ] emailExists()
+
+[ ] getDashboardData()
+
+[ ] exportUsers()
+
+
+JSP
+----
+
+[ ] forgotPassword.jsp
+
+[ ] resetPassword.jsp
+
+[ ] error.jsp
+
+[ ] sessionExpired.jsp
+
+
+CSS
+----
+
+[ ] table.css
+
+[ ] profile.css
+
+[ ] login.css
+
+[ ] register.css
+
+
+JAVASCRIPT
+-----------
+
+[ ] validation.js
+
+[ ] dashboard.js
+
+[ ] search.js
+
+
+PROJECT FEATURES REMAINING
+---------------------------
+
+[ ] Dashboard Cards
+
+[ ] Dashboard Statistics
+
+[ ] Dashboard Charts
+
+[ ] Search User
+
+[ ] Pagination
+
+[ ] Sort Table
+
+[ ] SweetAlert Success Message
+
+[ ] SweetAlert Delete Confirmation
+
+[ ] Toast Notification
+
+[ ] Profile Image Upload
+
+[ ] File Upload
+
+[ ] Export to PDF
+
+[ ] Export to Excel
+
+[ ] Forgot Password
+
+[ ] Reset Password
+
+[ ] Remember Me
+
+[ ] Session Timeout
+
+[ ] Activity Log
+
+[ ] Audit Trail
+
+[ ] Responsive Dashboard
+
+[ ] Dark Mode
+
+[ ] Loading Animation
+
+[ ] Custom 404 Page
+
+[ ] Custom 500 Error Page
+
+
+==========================================================
+ROLE PERMISSION
+==========================================================
+
+ADMIN
+
+✓ Login
+✓ Dashboard
+✓ Insert User
+✓ Update User
+✓ Delete User
+✓ Display User
+✓ View Profile
+✓ Change Password
+
+
+EMPLOYEE
+
+✓ Login
+✓ Dashboard
+✓ Insert User
+✓ Update User
+✓ Display User
+
+✗ Delete User
+
+
+CLIENT
+
+✓ Login
+✓ Dashboard
+✓ View Own Profile
+✓ Change Password
+
+✗ Insert User
+
+✗ Delete User
+
+✗ Display All Users
+
+
+==========================================================
+FUTURE IMPROVEMENTS
+==========================================================
+
+[ ] BCrypt Password Encryption
+
+[ ] Email Verification
+
+[ ] OTP Verification
+
+[ ] Google Login
+
+[ ] JWT Authentication
+
+[ ] REST API
+
+[ ] Image Upload
+
+[ ] Docker
+
+[ ] Maven Project
+
+[ ] Logging
+
+[ ] Exception Handling
+
+[ ] Unit Testing
+
+==========================================================
+FINAL GOAL
+==========================================================
+
+A Professional Advanced Java Role Management System
+
+Technology Stack
+
+✔ Java Servlet
+
+✔ JSP
+
+✔ PostgreSQL
+
+✔ JDBC
+
+✔ Bootstrap 5
+
+✔ MVC Architecture
+
+✔ Authentication
+
+✔ Authorization
+
+✔ CRUD Operations
+
+✔ Responsive Design
+
+✔ Professional Admin Dashboard
+
+==========================================================

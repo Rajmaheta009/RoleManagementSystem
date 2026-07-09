@@ -1,0 +1,55 @@
+package servlet;
+
+import dao.UserDAO;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
+import java.io.IOException;
+
+import model.user;
+
+@WebServlet("/UpdateProfileServlet")
+public class UpdateProfileServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+
+            response.sendRedirect("login.jsp");
+            return;
+
+        }
+
+        user user = (user) session.getAttribute("user");
+
+        user.setFullname(request.getParameter("fullname"));
+        user.setEmail(request.getParameter("email"));
+        user.setPhone(request.getParameter("phone"));
+        user.setGender(request.getParameter("gender"));
+        user.setAddress(request.getParameter("address"));
+
+        UserDAO dao = new UserDAO();
+
+        boolean result = dao.updateProfile(user);
+
+        if (result) {
+
+            session.setAttribute("user", user);
+
+            response.sendRedirect("ProfileServlet");
+
+        } else {
+
+            response.getWriter().println("Profile Update Failed.");
+
+        }
+
+    }
+
+}
