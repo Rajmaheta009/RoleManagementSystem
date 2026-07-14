@@ -1,9 +1,8 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.user"%>
+<%@page import="model.User"%>
 
 <%
-    user user = (user) request.getAttribute("user");
+    User user = (User) request.getAttribute("user");
 
     if (user == null) {
         response.sendRedirect("login.jsp");
@@ -13,78 +12,146 @@
 
 <!DOCTYPE html>
 <html>
+
     <head>
 
         <meta charset="UTF-8">
 
-        <title>My Profile</title>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0">
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <title>My Profile | Role Management System</title>
 
-        <link rel="stylesheet" href="css/dashboard.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+              rel="stylesheet">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+              rel="stylesheet">
+
+        <link rel="stylesheet"
+              href="css/dashboard.css">
 
     </head>
 
     <body class="bg-light">
 
         <jsp:include page="navbar.jsp"/>
-        <jsp:include page="sidebar.jsp"/>
 
-        <div class="container mt-5">
+        <div class="container-fluid">
 
-            <div class="row justify-content-center">
+            <div class="row">
 
-                <div class="col-md-8">
+                <!-- Sidebar -->
 
-                    <div class="card shadow-lg">
+                <div class="col-md-2 p-0">
+
+                    <jsp:include page="sidebar.jsp"/>
+
+                </div>
+
+                <!-- Main Content -->
+
+                <div class="col-md-10 p-4">
+
+                    <div class="card shadow">
 
                         <div class="card-header bg-primary text-white">
 
-                            <h3>My Profile</h3>
+                            <h3 class="mb-0">
+
+                                <i class="bi bi-person-circle"></i>
+
+                                My Profile
+
+                            </h3>
 
                         </div>
 
                         <div class="card-body">
 
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-hover">
 
                                 <tr>
-                                    <th>ID</th>
-                                    <td><%=user.getId()%></td>
+
+                                    <th width="220">User ID</th>
+
+                                    <td>
+
+                                        <%= user.getId()%>
+
+                                    </td>
+
                                 </tr>
 
                                 <tr>
+
                                     <th>Full Name</th>
-                                    <td><%=user.getFullname()%></td>
+
+                                    <td>
+
+                                        <%= user.getFullname()%>
+
+                                    </td>
+
                                 </tr>
 
                                 <tr>
+
                                     <th>Email</th>
-                                    <td><%=user.getEmail()%></td>
+
+                                    <td>
+
+                                        <%= user.getEmail()%>
+
+                                    </td>
+
                                 </tr>
 
                                 <tr>
+
                                     <th>Phone</th>
-                                    <td><%=user.getPhone()%></td>
+
+                                    <td>
+
+                                        <%= user.getPhone()%>
+
+                                    </td>
+
                                 </tr>
 
                                 <tr>
+
                                     <th>Gender</th>
-                                    <td><%=user.getGender()%></td>
+
+                                    <td>
+
+                                        <%= user.getGender()%>
+
+                                    </td>
+
                                 </tr>
 
                                 <tr>
+
                                     <th>Address</th>
-                                    <td><%=user.getAddress()%></td>
+
+                                    <td>
+
+                                        <%= user.getAddress()%>
+
+                                    </td>
+
                                 </tr>
 
                                 <tr>
+
                                     <th>Role</th>
+
                                     <td>
 
                                         <span class="badge bg-success">
 
-                                            <%=user.getRole()%>
+                                            <%= user.getRole()%>
 
                                         </span>
 
@@ -98,11 +165,7 @@
 
                                     <td>
 
-                                        <%
-
-                                            if (user.isStatus()) {
-
-                                        %>
+                                        <% if (user.isStatus()) { %>
 
                                         <span class="badge bg-primary">
 
@@ -110,9 +173,7 @@
 
                                         </span>
 
-                                        <%} else {
-
-                                        %>
+                                        <% } else { %>
 
                                         <span class="badge bg-danger">
 
@@ -120,9 +181,7 @@
 
                                         </span>
 
-                                        <%    }
-
-                                        %>
+                                        <% }%>
 
                                     </td>
 
@@ -130,10 +189,21 @@
 
                             </table>
 
-                            <div class="text-center">
+                            <div class="mt-4 text-center">
+
+                                <a href="editProfile.jsp"
+                                   class="btn btn-success">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                    Edit Profile
+
+                                </a>
 
                                 <a href="changePassword.jsp"
                                    class="btn btn-warning">
+
+                                    <i class="bi bi-key-fill"></i>
 
                                     Change Password
 
@@ -141,6 +211,8 @@
 
                                 <a href="DashboardServlet"
                                    class="btn btn-primary">
+
+                                    <i class="bi bi-house-fill"></i>
 
                                     Dashboard
 
@@ -158,6 +230,10 @@
 
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <jsp:include page="footer.jsp"/>
+
     </body>
+
 </html>
-<jsp:include page="footer.jsp"/>

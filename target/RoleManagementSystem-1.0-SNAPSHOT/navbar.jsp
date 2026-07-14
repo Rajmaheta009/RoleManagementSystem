@@ -1,16 +1,18 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.user"%>
+<%@page import="model.User"%>
 
 <%
-    user user = (user) session.getAttribute("user");
+    User currentUser = (User) session.getAttribute("user");
 %>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
 
     <div class="container-fluid">
 
-        <a class="navbar-brand fw-bold" href="DashboardServlet">
+        <a class="navbar-brand fw-bold"
+           href="<%=request.getContextPath()%>/DashboardServlet">
 
             Role Management System
 
@@ -30,10 +32,47 @@
 
             <ul class="navbar-nav ms-auto">
 
+                <% if (currentUser == null) {%>
+
                 <li class="nav-item">
 
                     <a class="nav-link"
-                       href="DashboardServlet">
+                       href="<%=request.getContextPath()%>/index.html">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="<%=request.getContextPath()%>/login.jsp">
+
+                        Login
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="<%=request.getContextPath()%>/register.jsp">
+
+                        Register
+
+                    </a>
+
+                </li>
+
+                <% } else {%>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="<%=request.getContextPath()%>/DashboardServlet">
 
                         Dashboard
 
@@ -44,7 +83,7 @@
                 <li class="nav-item">
 
                     <a class="nav-link"
-                       href="ProfileServlet">
+                       href="<%=request.getContextPath()%>/ProfileServlet">
 
                         Profile
 
@@ -59,7 +98,7 @@
                        role="button"
                        data-bs-toggle="dropdown">
 
-                        <%= user.getFullname()%>
+                        <%= currentUser.getFullname()%>
 
                     </a>
 
@@ -72,7 +111,7 @@
                                 Role :
                                 <strong>
 
-                                    <%= user.getRole()%>
+                                    <%= currentUser.getRoleId()%>
 
                                 </strong>
 
@@ -80,12 +119,16 @@
 
                         </li>
 
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+
+                            <hr class="dropdown-divider">
+
+                        </li>
 
                         <li>
 
                             <a class="dropdown-item"
-                               href="ProfileServlet">
+                               href="<%=request.getContextPath()%>/ProfileServlet">
 
                                 My Profile
 
@@ -96,7 +139,7 @@
                         <li>
 
                             <a class="dropdown-item"
-                               href="changePassword.jsp">
+                               href="<%=request.getContextPath()%>/changePassword.jsp">
 
                                 Change Password
 
@@ -104,12 +147,16 @@
 
                         </li>
 
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+
+                            <hr class="dropdown-divider">
+
+                        </li>
 
                         <li>
 
                             <a class="dropdown-item text-danger"
-                               href="LogoutServlet">
+                               href="<%=request.getContextPath()%>/LogoutServlet">
 
                                 Logout
 
@@ -121,6 +168,8 @@
 
                 </li>
 
+                <% }%>
+
             </ul>
 
         </div>
@@ -128,4 +177,5 @@
     </div>
 
 </nav>
-<jsp:include page="footer.jsp"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>

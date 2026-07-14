@@ -1,17 +1,18 @@
 package servlet;
 
-import dao.UserDAO;
-import model.User;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet("/DisplayUserServlet")
-public class DisplayUserServlet extends HttpServlet {
+import model.User;
+
+@WebServlet("/ProfileServlet")
+public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,
@@ -20,6 +21,7 @@ public class DisplayUserServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
+        // User not logged in
         if (session == null || session.getAttribute("user") == null) {
 
             response.sendRedirect("login.jsp");
@@ -27,13 +29,14 @@ public class DisplayUserServlet extends HttpServlet {
 
         }
 
-        UserDAO dao = new UserDAO();
+        // Get logged-in user from session
+        User user = (User) session.getAttribute("user");
 
-        List<User> users = dao.getAllUsers();
+        // Send user object to JSP
+        request.setAttribute("user", user);
 
-        request.setAttribute("users", users);
-
-        request.getRequestDispatcher("displayUsers.jsp")
+        // Open profile page
+        request.getRequestDispatcher("profile.jsp")
                 .forward(request, response);
 
     }

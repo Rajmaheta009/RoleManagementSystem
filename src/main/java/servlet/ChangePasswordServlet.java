@@ -1,7 +1,7 @@
 package servlet;
 
 import dao.UserDAO;
-import model.user;
+import model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,7 +24,7 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
 
-        user user = (user) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         String oldPassword = request.getParameter("oldPassword");
         String newPassword = request.getParameter("newPassword");
@@ -40,7 +40,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
             return;
         }
-
+        
         // Check new password confirmation
         if (!newPassword.equals(confirmPassword)) {
 

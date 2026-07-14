@@ -2,10 +2,7 @@ package servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
@@ -20,13 +17,14 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         if (session != null) {
-
             session.invalidate();
-
         }
 
-        response.sendRedirect("login.jsp");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
 
+        response.sendRedirect("login.jsp");
     }
 
     @Override
@@ -35,6 +33,5 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
 
         doGet(request, response);
-
     }
 }

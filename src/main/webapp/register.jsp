@@ -1,19 +1,21 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
-
 <html>
 
     <head>
 
-        <title>Registration</title>
+        <meta charset="UTF-8">
+
+        <title>User Registration | Role Management System</title>
 
         <link rel="stylesheet" href="css/style.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
 
     <body>
+        <jsp:include page="navbar.jsp"/>
 
         <div class="container">
 
@@ -23,7 +25,28 @@
 
                 <p>User Registration</p>
 
-                <form action="RegisterServlet" method="post">
+                <%
+                    String error = (String) request.getAttribute("error");
+
+                    if (error == null) {
+                        error = (String) session.getAttribute("error");
+                    }
+
+                    if (error != null) {
+                %>
+
+                <div class="alert alert-danger">
+
+                    <%= error%>
+
+                </div>
+
+                <%
+                        session.removeAttribute("error");
+                    }
+                %>
+
+                <form action="<%= request.getContextPath() %>/RegisterServlet" method="post">
 
                     <div class="row">
 
@@ -62,7 +85,7 @@
                             <input
                                 type="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder="Enter Password"
                                 required>
 
                         </div>
@@ -74,7 +97,7 @@
                             <input
                                 type="text"
                                 name="phone"
-                                placeholder="Phone Number"
+                                placeholder="Enter Phone Number"
                                 required>
 
                         </div>
@@ -90,7 +113,8 @@
                             <input
                                 type="radio"
                                 name="gender"
-                                value="Male">
+                                value="Male"
+                                required>
 
                             Male
 
@@ -127,33 +151,20 @@
                         <textarea
                             name="address"
                             rows="3"
-                            placeholder="Enter Address"></textarea>
+                            placeholder="Enter Address"
+                            required></textarea>
 
                     </div>
 
-                    <div class="input-box">
+                    <!-- Hidden Role -->
+                    <input
+                        type="hidden"
+                        name="role"
+                        value="CLIENT">
 
-                        <label>Role</label>
-
-                        <select name="role">
-
-                            <option value="CLIENT">
-
-                                Client
-
-                            </option>
-
-                            <option value="EMPLOYEE">
-
-                                Employee
-
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <button type="submit">
+                    <button
+                        type="submit"
+                        class="btn btn-success w-100">
 
                         Register
 
@@ -161,9 +172,9 @@
 
                 </form>
 
-                <div class="link">
+                <div class="link mt-3">
 
-                    Already Registered?
+                    Already have an account?
 
                     <a href="login.jsp">
 
@@ -176,6 +187,10 @@
             </div>
 
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+        <jsp:include page="footer.jsp"/>
 
     </body>
 

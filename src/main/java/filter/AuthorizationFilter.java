@@ -1,7 +1,5 @@
 package filter;
 
-import model.user;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
@@ -9,15 +7,15 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.User;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "AuthorizationFilter", urlPatterns = {
+@WebFilter(urlPatterns = {
     "/InsertUserServlet",
     "/UpdateUserServlet",
     "/DeleteUserServlet"
 })
-
 public class AuthorizationFilter extends HttpFilter {
 
     @Override
@@ -28,52 +26,41 @@ public class AuthorizationFilter extends HttpFilter {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null) {
+        if (session == null || session.getAttribute("user") == null) {
 
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
 
         }
 
-        user user = (user) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
+        int role = user.getRoleId();
 
-        if (user == null) {
+        String servlet = request.getServletPath();
 
-            response.sendRedirect("login.jsp");
-            return;
+        switch (servlet) {
 
-        }
+            case "/DeleteUserServlet":
 
-        String role = user.getRole();
+                if (!(role == 1)) {
+                    response.sendRedirect(request.getContextPath() + "/accessDenied.jsp");
+                    return;
+                }
 
-        String url = request.getRequestURI();
+                break;
 
-        if (url.contains("DeleteUserServlet")) {
+            case "/InsertUserServlet":
 
-            if (!role.equalsIgnoreCase("ADMIN")) {
+            case "/UpdateUserServlet":
 
-                response.sendRedirect("accessDenied.jsp");
-                return;
+                if (!(role == 1 || role == 2)) {
+                    response.sendRedirect(request.getContextPath() + "/accessDenied.jsp");
+                    return;
+                }
 
-            }
-
-        }
-
-        if (url.contains("InsertUserServlet")
-                || url.contains("UpdateUserServlet")) {
-
-            if (!(role.equalsIgnoreCase("ADMIN")
-                    || role.equalsIgnoreCase("EMPLOYEE"))) {
-
-                response.sendRedirect("accessDenied.jsp");
-                return;
-
-            }
-
+                break;
         }
 
         chain.doFilter(request, response);
-
     }
-
 }

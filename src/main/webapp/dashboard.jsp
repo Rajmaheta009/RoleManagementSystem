@@ -1,160 +1,157 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-
 <html>
 
-<head>
+    <head>
 
-    <title>Dashboard</title>
+        <meta charset="UTF-8">
 
-    <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Dashboard | Role Management System</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+              rel="stylesheet">
 
-    <link rel="stylesheet" href="css/dashboard.css">
+        <link rel="stylesheet"
+              href="css/dashboard.css">
 
-</head>
+    </head>
 
-<body>
+    <body class="bg-light">
 
-<jsp:include page="navbar.jsp"/>
+        <jsp:include page="navbar.jsp"/>
 
-<div class="container-fluid">
-
-    <div class="row">
-
-        <div class="col-md-2 p-0">
-
-            <jsp:include page="sidebar.jsp"/>
-
-        </div>
-
-        <div class="col-md-10 dashboard-content">
-
-            <h2 class="mb-4">
-
-                Welcome,
-                <%=session.getAttribute("name")==null?"Guest":session.getAttribute("name")%>
-
-            </h2>
+        <div class="container-fluid">
 
             <div class="row">
 
-                <div class="col-lg-3 col-md-6">
+                <!-- Sidebar -->
 
-                    <div class="card dashboard-card bg-primary">
+                <div class="col-md-2 p-0">
 
-                        <h5>Total Users</h5>
+                    <jsp:include page="sidebar.jsp"/>
 
-                        <h1>${totalUsers}</h1>
+                </div>
+
+                <!-- Main Content -->
+
+                <div class="col-md-10 p-4">
+
+                    <h2 class="mb-4">
+
+                        Welcome,
+                        <strong>
+
+                            <%= session.getAttribute("name") == null ? "Guest" : session.getAttribute("name")%>
+
+                        </strong>
+
+                    </h2>
+
+                    <!-- Dashboard Cards -->
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-3 col-md-6">
+
+                            <div class="card dashboard-card text-white bg-primary shadow">
+
+                                <div class="card-body text-center">
+
+                                    <h5>Total Users</h5>
+
+                                    <h2>${totalUsers}</h2>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+
+                            <div class="card dashboard-card text-white bg-success shadow">
+
+                                <div class="card-body text-center">
+
+                                    <h5>Employees</h5>
+
+                                    <h2>${totalEmployees}</h2>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+
+                            <div class="card dashboard-card text-dark bg-warning shadow">
+
+                                <div class="card-body text-center">
+
+                                    <h5>Clients</h5>
+
+                                    <h2>${totalClients}</h2>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+
+                            <div class="card dashboard-card text-white bg-danger shadow">
+
+                                <div class="card-body text-center">
+
+                                    <h5>Admins</h5>
+
+                                    <h2>${totalAdmins}</h2>
+
+                                </div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                </div>
+                    <!-- Information Card -->
 
-                <div class="col-lg-3 col-md-6">
+                    <div class="card shadow mt-5">
 
-                    <div class="card dashboard-card bg-success">
+                        <div class="card-header bg-dark text-white">
 
-                        <h5>Employees</h5>
+                            Dashboard Overview
 
-                        <h1>${totalEmployees}</h1>
+                        </div>
 
-                    </div>
+                        <div class="card-body">
 
-                </div>
+                            <h5 class="card-title">
 
-                <div class="col-lg-3 col-md-6">
+                                Welcome to the Role Management System
 
-                    <div class="card dashboard-card bg-warning">
+                            </h5>
 
-                        <h5>Clients</h5>
+                            <p class="card-text">
 
-                        <h1>${totalClients}</h1>
+                                You are successfully logged in.
 
-                    </div>
+                                Use the sidebar to manage users, update your profile,
+                                change your password, and access all available features
+                                according to your role.
 
-                </div>
+                            </p>
 
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="card dashboard-card bg-danger">
-
-                        <h5>Admins</h5>
-
-                        <h1>${totalAdmins}</h1>
+                        </div>
 
                     </div>
-
-                </div>
-
-            </div>
-
-            <div class="card mt-5 shadow">
-
-                <div class="card-header">
-
-                    Recent Users
-
-                </div>
-
-                <div class="card-body">
-
-                    <table class="table table-bordered table-hover">
-
-                        <thead class="table-dark">
-
-                        <tr>
-
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                        <tr>
-
-                            <td>1</td>
-                            <td>Raj</td>
-                            <td>raj@gmail.com</td>
-                            <td>ADMIN</td>
-                            <td>Active</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>2</td>
-                            <td>Rahul</td>
-                            <td>rahul@gmail.com</td>
-                            <td>EMPLOYEE</td>
-                            <td>Active</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>3</td>
-                            <td>Riya</td>
-                            <td>riya@gmail.com</td>
-                            <td>CLIENT</td>
-                            <td>Active</td>
-
-                        </tr>
-
-                        </tbody>
-
-                    </table>
 
                 </div>
 
@@ -162,11 +159,10 @@
 
         </div>
 
-    </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-</div>
+        <jsp:include page="footer.jsp"/>
 
-</body>
+    </body>
 
 </html>
-<jsp:include page="footer.jsp"/>

@@ -1,7 +1,7 @@
 package servlet;
 
 import dao.UserDAO;
-import model.user;
+import model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,21 +18,45 @@ public class SearchUserServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String keyword = request.getParameter("keyword");
+        // Check Login Session
+        HttpSession session = request.getSession(false);
 
-        if(keyword == null){
-            keyword = "";
+        if (session == null || session.getAttribute("user") == null) {
+
+            response.sendRedirect("login.jsp");
+            return;
+
         }
 
+        // Get Search Keyword
+        String keyword = request.getParameter("keyword");
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+
+            keyword = "";
+
+        }
+
+        // Search User
         UserDAO dao = new UserDAO();
 
-        List<user> users = dao.searchUsers(keyword);
+        List<User> users = dao.searchUsers(keyword);
 
+        // Send Data to JSP
         request.setAttribute("users", users);
         request.setAttribute("keyword", keyword);
 
         request.getRequestDispatcher("displayUsers.jsp")
                 .forward(request, response);
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        doGet(request, response);
 
     }
 

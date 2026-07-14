@@ -7,7 +7,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-import model.user;
+import model.User;
 
 @WebServlet("/UpdateProfileServlet")
 public class UpdateProfileServlet extends HttpServlet {
@@ -19,14 +19,14 @@ public class UpdateProfileServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null) {
+        if (session == null || session.getAttribute("user") == null) {
 
             response.sendRedirect("login.jsp");
             return;
 
         }
 
-        user user = (user) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         user.setFullname(request.getParameter("fullname"));
         user.setEmail(request.getParameter("email"));
@@ -46,7 +46,10 @@ public class UpdateProfileServlet extends HttpServlet {
 
         } else {
 
-            response.getWriter().println("Profile Update Failed.");
+            request.setAttribute("error", "Profile Update Failed.");
+
+            request.getRequestDispatcher("profile.jsp")
+                    .forward(request, response);
 
         }
 

@@ -1,116 +1,244 @@
-<jsp:include page="navbar.jsp"/>
-<form action="InsertUserServlet" method="post">
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="model.User"%>
 
-    <div class="row">
+<%
+    User currentUser = (User) session.getAttribute("user");
 
-        <div class="col-md-6 mb-3">
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 
-            <label class="form-label">Full Name</label>
+<!DOCTYPE html>
+<html>
 
-            <input type="text"
-                   class="form-control"
-                   name="fullname"
-                   required>
+<head>
 
-        </div>
+    <meta charset="UTF-8">
 
-        <div class="col-md-6 mb-3">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-            <label class="form-label">Email</label>
+    <title>Add User | Role Management System</title>
 
-            <input type="email"
-                   class="form-control"
-                   name="email"
-                   required>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-        </div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet">
 
-        <div class="col-md-6 mb-3">
+    <link rel="stylesheet"
+          href="css/dashboard.css">
 
-            <label class="form-label">Password</label>
+</head>
 
-            <input type="password"
-                   class="form-control"
-                   name="password"
-                   required>
+<body class="bg-light">
 
-        </div>
+    <jsp:include page="navbar.jsp"/>
 
-        <div class="col-md-6 mb-3">
+    <div class="container-fluid">
 
-            <label class="form-label">Phone</label>
+        <div class="row">
 
-            <input type="text"
-                   class="form-control"
-                   name="phone"
-                   required>
+            <!-- Sidebar -->
 
-        </div>
+            <div class="col-md-2 p-0">
 
-        <div class="col-md-6 mb-3">
+                <jsp:include page="sidebar.jsp"/>
 
-            <label class="form-label">Gender</label>
+            </div>
 
-            <select class="form-select"
-                    name="gender">
+            <!-- Main Content -->
 
-                <option value="Male">Male</option>
+            <div class="col-md-10 p-4">
 
-                <option value="Female">Female</option>
+                <div class="card shadow">
 
-                <option value="Other">Other</option>
+                    <div class="card-header bg-success text-white">
 
-            </select>
+                        <h3 class="mb-0">
 
-        </div>
+                            <i class="bi bi-person-plus-fill"></i>
 
-        <div class="col-md-6 mb-3">
+                            Add New User
 
-            <label class="form-label">Role</label>
+                        </h3>
 
-            <select class="form-select"
-                    name="role">
+                    </div>
 
-                <option value="CLIENT">Client</option>
+                    <div class="card-body">
 
-                <option value="EMPLOYEE">Employee</option>
+                        <form action="InsertUserServlet" method="post">
 
-                <option value="ADMIN">Admin</option>
+                            <div class="row">
 
-            </select>
+                                <div class="col-md-6 mb-3">
 
-        </div>
+                                    <label class="form-label">
 
-        <div class="col-12 mb-3">
+                                        Full Name
 
-            <label class="form-label">Address</label>
+                                    </label>
 
-            <textarea
-                class="form-control"
-                name="address"
-                rows="4"></textarea>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="fullname"
+                                           required>
 
-        </div>
+                                </div>
 
-        <div class="col-12">
+                                <div class="col-md-6 mb-3">
 
-            <button
-                class="btn btn-success">
+                                    <label class="form-label">
 
-                Save User
+                                        Email
 
-            </button>
+                                    </label>
 
-            <a href="DisplayUserServlet"
-               class="btn btn-secondary">
+                                    <input type="email"
+                                           class="form-control"
+                                           name="email"
+                                           required>
 
-                Back
+                                </div>
 
-            </a>
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+
+                                        Password
+
+                                    </label>
+
+                                    <input type="password"
+                                           class="form-control"
+                                           name="password"
+                                           required>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+
+                                        Phone
+
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           name="phone"
+                                           maxlength="10"
+                                           required>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+
+                                        Gender
+
+                                    </label>
+
+                                    <select class="form-select"
+                                            name="gender"
+                                            required>
+
+                                        <option value="">Select Gender</option>
+
+                                        <option value="Male">Male</option>
+
+                                        <option value="Female">Female</option>
+
+                                        <option value="Other">Other</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+
+                                        Role
+
+                                    </label>
+
+                                    <select class="form-select"
+                                            name="role"
+                                            required>
+
+                                        <option value="CLIENT">Client</option>
+
+                                        <option value="EMPLOYEE">Employee</option>
+
+                                        <% if(currentUser.getRole().equalsIgnoreCase("ADMIN")) { %>
+
+                                        <option value="ADMIN">Admin</option>
+
+                                        <% } %>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-12 mb-3">
+
+                                    <label class="form-label">
+
+                                        Address
+
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              name="address"
+                                              rows="4"
+                                              required></textarea>
+
+                                </div>
+
+                                <div class="col-12">
+
+                                    <button type="submit"
+                                            class="btn btn-success">
+
+                                        <i class="bi bi-check-circle-fill"></i>
+
+                                        Save User
+
+                                    </button>
+
+                                    <a href="DisplayUserServlet"
+                                       class="btn btn-secondary">
+
+                                        <i class="bi bi-arrow-left-circle-fill"></i>
+
+                                        Back
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
-</form>
-<jsp:include page="footer.jsp"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <jsp:include page="footer.jsp"/>
+
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 package model;
 
-public class user {
+public class User {
 
     private int id;
     private String fullname;
@@ -9,15 +9,15 @@ public class user {
     private String phone;
     private String gender;
     private String address;
-    private String role;
+    private int roleId;
     private boolean status;
 
-    public user() {
+    public User() {
     }
 
-    public user(int id, String fullname, String email, String password,
+    public User(int id, String fullname, String email, String password,
             String phone, String gender, String address,
-            String role, boolean status) {
+            int roleId, boolean status) {
 
         this.id = id;
         this.fullname = fullname;
@@ -26,9 +26,8 @@ public class user {
         this.phone = phone;
         this.gender = gender;
         this.address = address;
-        this.role = role;
+        this.roleId = roleId;
         this.status = status;
-
     }
 
     public int getId() {
@@ -87,12 +86,12 @@ public class user {
         this.address = address;
     }
 
-    public String getRole() {
-        return role;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public boolean isStatus() {

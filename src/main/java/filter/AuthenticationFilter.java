@@ -1,8 +1,6 @@
 package filter;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
@@ -12,33 +10,24 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "AuthenticationFilter", urlPatterns = {
-    "/dashboard.jsp",
+@WebFilter(urlPatterns = {
     "/DashboardServlet",
     "/DisplayUserServlet",
     "/InsertUserServlet",
     "/UpdateUserServlet",
     "/DeleteUserServlet",
+    "/SearchUserServlet",
     "/ProfileServlet",
     "/UpdateProfileServlet",
     "/ChangePasswordServlet",
+    "/dashboard.jsp",
+    "/displayUsers.jsp",
     "/insertUser.jsp",
     "/updateUser.jsp",
-    "/displayUsers.jsp",
     "/profile.jsp",
-    "/editProfile.jsp",
     "/changePassword.jsp"
 })
-
 public class AuthenticationFilter extends HttpFilter {
-
-    @Override
-    public void init(FilterConfig filterConfig)
-            throws ServletException {
-
-        super.init(filterConfig);
-
-    }
 
     @Override
     protected void doFilter(HttpServletRequest request,
@@ -48,17 +37,17 @@ public class AuthenticationFilter extends HttpFilter {
 
         HttpSession session = request.getSession(false);
 
-        if (session != null
-                && session.getAttribute("user") != null) {
+        if (session == null || session.getAttribute("user") == null) {
 
-            chain.doFilter(request, response);
-
-        } else {
-
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
 
         }
 
-    }
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
 
+        chain.doFilter(request, response);
+    }
 }

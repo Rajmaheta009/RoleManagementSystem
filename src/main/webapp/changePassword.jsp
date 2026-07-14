@@ -1,106 +1,162 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="model.User"%>
+
+<%
+    User user = (User) session.getAttribute("user");
+
+    if (user == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 
 <!DOCTYPE html>
-
 <html>
 
-    <head>
+<head>
 
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-        <title>Change Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-              rel="stylesheet">
+    <title>Change Password | Role Management System</title>
 
-        <link rel="stylesheet"
-              href="css/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-    </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet">
 
-    <body class="bg-light">
+    <link rel="stylesheet"
+          href="css/dashboard.css">
 
-        <jsp:include page="navbar.jsp"/>
-        <jsp:include page="sidebar.jsp"/>
+</head>
 
-        <div class="container mt-5">
+<body class="bg-light">
 
-            <div class="row justify-content-center">
+    <jsp:include page="navbar.jsp"/>
 
-                <div class="col-md-6">
+    <div class="container-fluid">
 
-                    <div class="card shadow">
+        <div class="row">
 
-                        <div class="card-header bg-warning">
+            <!-- Sidebar -->
 
-                            <h3>Change Password</h3>
+            <div class="col-md-2 p-0">
+
+                <jsp:include page="sidebar.jsp"/>
+
+            </div>
+
+            <!-- Main Content -->
+
+            <div class="col-md-10 p-4">
+
+                <div class="card shadow">
+
+                    <div class="card-header bg-warning">
+
+                        <h3 class="mb-0">
+
+                            <i class="bi bi-key-fill"></i>
+
+                            Change Password
+
+                        </h3>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <% if(request.getAttribute("error") != null){ %>
+
+                        <div class="alert alert-danger">
+
+                            <%= request.getAttribute("error") %>
+
+                        </div>
+
+                        <% } %>
+
+                        <% if(request.getAttribute("success") != null){ %>
+
+                        <div class="alert alert-success">
+
+                            <%= request.getAttribute("success") %>
 
                         </div>
 
-                        <div class="card-body">
+                        <% } %>
 
-                            <form action="ChangePasswordServlet"
-                                  method="post">
+                        <form action="ChangePasswordServlet"
+                              method="post">
 
-                                <div class="mb-3">
+                            <div class="mb-3">
 
-                                    <label class="form-label">
+                                <label class="form-label">
 
-                                        Current Password
+                                    Current Password
 
-                                    </label>
+                                </label>
 
-                                    <input
-                                        type="password"
-                                        name="oldPassword"
-                                        class="form-control"
-                                        required>
+                                <input type="password"
+                                       name="oldPassword"
+                                       class="form-control"
+                                       required>
 
-                                </div>
+                            </div>
 
-                                <div class="mb-3">
+                            <div class="mb-3">
 
-                                    <label class="form-label">
+                                <label class="form-label">
 
-                                        New Password
+                                    New Password
 
-                                    </label>
+                                </label>
 
-                                    <input
-                                        type="password"
-                                        name="newPassword"
-                                        class="form-control"
-                                        required>
+                                <input type="password"
+                                       name="newPassword"
+                                       class="form-control"
+                                       minlength="6"
+                                       required>
 
-                                </div>
+                            </div>
 
-                                <div class="mb-3">
+                            <div class="mb-3">
 
-                                    <label class="form-label">
+                                <label class="form-label">
 
-                                        Confirm Password
+                                    Confirm Password
 
-                                    </label>
+                                </label>
 
-                                    <input
-                                        type="password"
-                                        name="confirmPassword"
-                                        class="form-control"
-                                        required>
+                                <input type="password"
+                                       name="confirmPassword"
+                                       class="form-control"
+                                       minlength="6"
+                                       required>
 
-                                </div>
+                            </div>
 
-                                <button
-                                    class="btn btn-success w-100">
+                            <button type="submit"
+                                    class="btn btn-success">
 
-                                    Update Password
+                                <i class="bi bi-check-circle-fill"></i>
 
-                                </button>
+                                Update Password
 
-                            </form>
+                            </button>
 
-                        </div>
+                            <a href="ProfileServlet"
+                               class="btn btn-secondary">
+
+                                <i class="bi bi-arrow-left-circle-fill"></i>
+
+                                Cancel
+
+                            </a>
+
+                        </form>
 
                     </div>
 
@@ -110,7 +166,12 @@
 
         </div>
 
-    </body>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <jsp:include page="footer.jsp"/>
+
+</body>
 
 </html>
-<jsp:include page="footer.jsp"/>

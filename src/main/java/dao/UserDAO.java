@@ -1,7 +1,7 @@
 package dao;
 
 import config.DBConnection;
-import model.user;
+import model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,24 +11,74 @@ import java.util.List;
 
 public class UserDAO {
 
+    private static final List<User> MEMORY_USERS = new ArrayList<>();
+    private static boolean seededDefaultUser = false;
+
     private Connection conn;
 
     public UserDAO() {
-
         conn = DBConnection.getConnection();
+//         System.out.println("Connection = " + conn);
+    }
 
+    private boolean useInMemoryStore() {
+//        System.out.println("connectiion = "+conn);
+        return conn == null;
+    }
+
+    private void seedDefaultUser() {
+
+        if (seededDefaultUser) {
+            return;
+        }
+
+        User admin = new User();
+
+        admin.setId(1);
+        admin.setFullname("Admin User");
+        admin.setEmail("admin@example.com");
+        admin.setPassword("admin123");
+        admin.setPhone("9999999999");
+        admin.setGender("Other");
+        admin.setAddress("System");
+        admin.setRoleId(1); // ADMIN Role ID
+        admin.setStatus(true);
+
+        MEMORY_USERS.add(admin);
+
+        seededDefaultUser = true;
     }
 
     // ==========================
     // Register User
     // ==========================
-    public boolean registerUser(user user) {
+    public boolean registerUser(User user) {
 
         boolean flag = false;
 
+        if (user != null) {
+            user.setEmail(user.getEmail().trim());
+            user.setPassword(user.getPassword().trim());
+        }
+
+        if (useInMemoryStore()) {
+
+            seedDefaultUser();
+
+            user.setId(MEMORY_USERS.size() + 1);
+
+            MEMORY_USERS.add(user);
+
+            return true;
+        }
+
         try {
 
-            String sql = "INSERT INTO users(fullname,email,password,phone,gender,address,role,status) VALUES(?,?,?,?,?,?,?,?)";
+            String sql = """
+            INSERT INTO users
+            (fullname,email,password,phone,gender,address,role_id,status)
+            VALUES (?,?,?,?,?,?,?,?)
+            """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -38,48 +88,53 @@ public class UserDAO {
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getGender());
             ps.setString(6, user.getAddress());
-            ps.setString(7, user.getRole());
+            ps.setInt(7, user.getRoleId());
             ps.setBoolean(8, user.isStatus());
 
-            int i = ps.executeUpdate();
+            int row = ps.executeUpdate();
 
-            if (i > 0) {
+            flag = row > 0;
 
-                flag = true;
-
-            }
+            System.out.println("Register Rows : " + row);
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            System.out.println("Register Error");
 
+            e.printStackTrace();
         }
 
         return flag;
-
     }
 
     // ==========================
     // Login User
     // ==========================
-    public user login(String email, String password) {
+    public User login(String email, String password) {
 
-        user user = null;
-
+        User user = null;
+        System.out.println("that is in login page");
         try {
 
-            String sql = "SELECT * FROM users WHERE email=? AND password=?";
+            String sql = """
+            SELECT *
+            FROM users
+            WHERE LOWER(email)=LOWER(?)
+            AND password=?
+            """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, email);
-            ps.setString(2, password);
+            ps.setString(1, email.trim());
+            ps.setString(2, password.trim());
 
             ResultSet rs = ps.executeQuery();
+            
 
             if (rs.next()) {
+                System.out.println("data is found");
 
-                user = new user();
+                user = new User();
 
                 user.setId(rs.getInt("id"));
                 user.setFullname(rs.getString("fullname"));
@@ -88,31 +143,46 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setGender(rs.getString("gender"));
                 user.setAddress(rs.getString("address"));
-                user.setRole(rs.getString("role"));
+                user.setRoleId(rs.getInt("role_id"));
                 user.setStatus(rs.getBoolean("status"));
+
+                System.out.println("Login Success");
+            } else {
+                
+                System.out.println("Invalid Email or Password");
 
             }
 
         } catch (Exception e) {
+
+            System.out.println("Login Error");
 
             e.printStackTrace();
 
         }
 
         return user;
-
     }
 
     // ==========================
     // Display All Users
     // ==========================
-    public List<user> getAllUsers() {
+    public List<User> getAllUsers() {
 
-        List<user> list = new ArrayList<>();
+        List<User> list = new ArrayList<>();
+
+        if (useInMemoryStore()) {
+            seedDefaultUser();
+            return new ArrayList<>(MEMORY_USERS);
+        }
 
         try {
 
-            String sql = "SELECT * FROM users ORDER BY id";
+            String sql = """
+                SELECT *
+                FROM users
+                ORDER BY id
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -120,7 +190,7 @@ public class UserDAO {
 
             while (rs.next()) {
 
-                user user = new user();
+                User user = new User();
 
                 user.setId(rs.getInt("id"));
                 user.setFullname(rs.getString("fullname"));
@@ -129,29 +199,30 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setGender(rs.getString("gender"));
                 user.setAddress(rs.getString("address"));
-                user.setRole(rs.getString("role"));
+                user.setRoleId(rs.getInt("role_id"));
                 user.setStatus(rs.getBoolean("status"));
 
                 list.add(user);
-
             }
+
+            System.out.println("Total Users Loaded : " + list.size());
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            System.out.println("getAllUsers Error");
 
+            e.printStackTrace();
         }
 
         return list;
-
     }
 // ==========================
 // Get User By ID
 // ==========================
 
-    public user getUserById(int id) {
+    public User getUserById(int id) {
 
-        user user = null;
+        User user = null;
 
         try {
 
@@ -165,7 +236,7 @@ public class UserDAO {
 
             if (rs.next()) {
 
-                user = new user();
+                user = new User();
 
                 user.setId(rs.getInt("id"));
                 user.setFullname(rs.getString("fullname"));
@@ -174,31 +245,49 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setGender(rs.getString("gender"));
                 user.setAddress(rs.getString("address"));
-                user.setRole(rs.getString("role"));
+                user.setRoleId(rs.getInt("role_id"));
                 user.setStatus(rs.getBoolean("status"));
+
+                System.out.println("User Found : " + user.getFullname());
+
+            } else {
+
+                System.out.println("User Not Found");
 
             }
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            System.out.println("getUserById Error");
 
+            e.printStackTrace();
         }
 
         return user;
-
     }
     // ==========================
 // Update User
 // ==========================
 
-    public boolean updateUser(user user) {
+    public boolean updateUser(User user) {
 
         boolean flag = false;
 
         try {
 
-            String sql = "UPDATE users SET fullname=?,email=?,password=?,phone=?,gender=?,address=?,role=?,status=? WHERE id=?";
+            String sql = """
+                UPDATE users
+                SET
+                fullname=?,
+                email=?,
+                password=?,
+                phone=?,
+                gender=?,
+                address=?,
+                role_id=?,
+                status=?
+                WHERE id=?
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -208,27 +297,26 @@ public class UserDAO {
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getGender());
             ps.setString(6, user.getAddress());
-            ps.setString(7, user.getRole());
+            ps.setInt(7, user.getRoleId());
             ps.setBoolean(8, user.isStatus());
             ps.setInt(9, user.getId());
 
-            int i = ps.executeUpdate();
+            int row = ps.executeUpdate();
 
-            if (i > 0) {
+            flag = row > 0;
 
-                flag = true;
-
-            }
+            System.out.println("Updated Rows : " + row);
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            System.out.println("Update Error");
 
+            e.printStackTrace();
         }
 
         return flag;
-
-    }// ==========================
+    }
+// ==========================
 // Delete User
 // ==========================
 
@@ -244,22 +332,20 @@ public class UserDAO {
 
             ps.setInt(1, id);
 
-            int i = ps.executeUpdate();
+            int row = ps.executeUpdate();
 
-            if (i > 0) {
+            flag = row > 0;
 
-                flag = true;
-
-            }
+            System.out.println("Deleted Rows : " + row);
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            System.out.println("Delete Error");
 
+            e.printStackTrace();
         }
 
         return flag;
-
     }
 // ==========================
 // Count Total Users
@@ -283,7 +369,11 @@ public class UserDAO {
 
             }
 
+            System.out.println("Total Users : " + count);
+
         } catch (Exception e) {
+
+            System.out.println("countUsers Error");
 
             e.printStackTrace();
 
@@ -302,7 +392,13 @@ public class UserDAO {
 
         try {
 
-            String sql = "SELECT COUNT(*) FROM users WHERE role='ADMIN'";
+            String sql = """
+                SELECT COUNT(*)
+                FROM users u
+                INNER JOIN roles r
+                ON u.role_id = r.id
+                WHERE UPPER(r.role_name)='ADMIN'
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -314,7 +410,11 @@ public class UserDAO {
 
             }
 
+            System.out.println("Admins : " + count);
+
         } catch (Exception e) {
+
+            System.out.println("countAdmins Error");
 
             e.printStackTrace();
 
@@ -333,7 +433,13 @@ public class UserDAO {
 
         try {
 
-            String sql = "SELECT COUNT(*) FROM users WHERE role='EMPLOYEE'";
+            String sql = """
+                SELECT COUNT(*)
+                FROM users u
+                INNER JOIN roles r
+                ON u.role_id = r.id
+                WHERE UPPER(r.role_name)='EMPLOYEE'
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -345,7 +451,11 @@ public class UserDAO {
 
             }
 
+            System.out.println("Employees : " + count);
+
         } catch (Exception e) {
+
+            System.out.println("countEmployees Error");
 
             e.printStackTrace();
 
@@ -364,7 +474,13 @@ public class UserDAO {
 
         try {
 
-            String sql = "SELECT COUNT(*) FROM users WHERE role='CLIENT'";
+            String sql = """
+                SELECT COUNT(*)
+                FROM users u
+                INNER JOIN roles r
+                ON u.role_id = r.id
+                WHERE UPPER(r.role_name)='CLIENT'
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -376,7 +492,11 @@ public class UserDAO {
 
             }
 
+            System.out.println("Clients : " + count);
+
         } catch (Exception e) {
+
+            System.out.println("countClients Error");
 
             e.printStackTrace();
 
@@ -385,10 +505,10 @@ public class UserDAO {
         return count;
 
     }
+
     // ==========================
 // Change Password
 // ==========================
-
     public boolean changePassword(int id, String password) {
 
         boolean flag = false;
@@ -402,15 +522,15 @@ public class UserDAO {
             ps.setString(1, password);
             ps.setInt(2, id);
 
-            int i = ps.executeUpdate();
+            int row = ps.executeUpdate();
 
-            if (i > 0) {
+            flag = row > 0;
 
-                flag = true;
-
-            }
+            System.out.println("Password Changed : " + row);
 
         } catch (Exception e) {
+
+            System.out.println("Password Change Error");
 
             e.printStackTrace();
 
@@ -423,34 +543,35 @@ public class UserDAO {
 // Search User
 // ==============================
 
-    public List<user> searchUsers(String keyword) {
+    public List<User> searchUsers(String keyword) {
 
-        List<user> list = new ArrayList<>();
+        List<User> list = new ArrayList<>();
 
         try {
 
-            String sql = "SELECT * FROM users "
-                    + "WHERE "
-                    + "LOWER(fullname) LIKE LOWER(?) "
-                    + "OR LOWER(email) LIKE LOWER(?) "
-                    + "OR phone LIKE ? "
-                    + "OR LOWER(role) LIKE LOWER(?) "
-                    + "ORDER BY id";
+            String sql = """
+                SELECT *
+                FROM users
+                WHERE
+                LOWER(fullname) LIKE LOWER(?)
+                OR LOWER(email) LIKE LOWER(?)
+                OR phone LIKE ?
+                ORDER BY id
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            String search = "%" + keyword + "%";
+            String search = "%" + keyword.trim() + "%";
 
             ps.setString(1, search);
             ps.setString(2, search);
             ps.setString(3, search);
-            ps.setString(4, search);
 
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
 
-                user user = new user();
+                User user = new User();
 
                 user.setId(rs.getInt("id"));
                 user.setFullname(rs.getString("fullname"));
@@ -459,14 +580,18 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setGender(rs.getString("gender"));
                 user.setAddress(rs.getString("address"));
-                user.setRole(rs.getString("role"));
+                user.setRoleId(rs.getInt("role_id"));
                 user.setStatus(rs.getBoolean("status"));
 
                 list.add(user);
 
             }
 
+            System.out.println("Search Result : " + list.size());
+
         } catch (Exception e) {
+
+            System.out.println("Search Error");
 
             e.printStackTrace();
 
@@ -479,13 +604,22 @@ public class UserDAO {
 // Update Logged-in User Profile
 // ======================================
 
-    public boolean updateProfile(user user) {
+    public boolean updateProfile(User user) {
 
-        boolean status = false;
+        boolean flag = false;
 
         try {
 
-            String sql = "UPDATE users SET fullname=?,email=?,phone=?,gender=?,address=? WHERE id=?";
+            String sql = """
+                UPDATE users
+                SET
+                fullname=?,
+                email=?,
+                phone=?,
+                gender=?,
+                address=?
+                WHERE id=?
+                """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -496,21 +630,21 @@ public class UserDAO {
             ps.setString(5, user.getAddress());
             ps.setInt(6, user.getId());
 
-            int i = ps.executeUpdate();
+            int row = ps.executeUpdate();
 
-            if (i > 0) {
+            flag = row > 0;
 
-                status = true;
-
-            }
+            System.out.println("Profile Updated : " + row);
 
         } catch (Exception e) {
+
+            System.out.println("Update Profile Error");
 
             e.printStackTrace();
 
         }
 
-        return status;
+        return flag;
 
     }
     // =====================================
@@ -523,19 +657,15 @@ public class UserDAO {
 
         try {
 
-            String sql = "SELECT * FROM users WHERE email=?";
+            String sql = "SELECT 1 FROM users WHERE LOWER(email)=LOWER(?)";
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, email);
+            ps.setString(1, email.trim());
 
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-
-                status = true;
-
-            }
+            status = rs.next();
 
         } catch (Exception e) {
 
@@ -544,6 +674,5 @@ public class UserDAO {
         }
 
         return status;
-
     }
 }

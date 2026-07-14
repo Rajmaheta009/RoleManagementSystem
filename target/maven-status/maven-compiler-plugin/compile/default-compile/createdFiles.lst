@@ -5,13 +5,12 @@ servlet\UpdateUserServlet.class
 com\mycompany\rolemanagementsystem\JakartaRestConfiguration.class
 servlet\InsertUserServlet.class
 filter\AuthenticationFilter.class
-model\user.class
 servlet\DisplayUserServlet.class
-filter\RoleFilter.class
 servlet\LoginServlet.class
 config\DBConnection.class
 servlet\ChangePasswordServlet.class
 servlet\DashboardServlet.class
+servlet\ProfileServlet.class
 config\test.class
 servlet\ForgotPasswordServlet.class
 dao\UserDAO.class
@@ -19,4 +18,5 @@ servlet\RegisterServlet.class
 servlet\SearchUserServlet.class
 servlet\UpdateProfileServlet.class
 filter\AuthorizationFilter.class
+model\User.class
 util\Validation.class

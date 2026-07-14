@@ -1,7 +1,6 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
-<%@page import="model.user"%>
+<%@page import="model.User"%>
 
 <!DOCTYPE html>
 
@@ -11,7 +10,9 @@
 
         <meta charset="UTF-8">
 
-        <title>All Users</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>All Users | Role Management System</title>
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
               rel="stylesheet">
@@ -21,7 +22,7 @@
 
     </head>
 
-    <body>
+    <body class="bg-light">
 
         <jsp:include page="navbar.jsp"/>
 
@@ -29,19 +30,74 @@
 
             <div class="row">
 
+                <!-- Sidebar -->
+
                 <div class="col-md-2 p-0">
 
                     <jsp:include page="sidebar.jsp"/>
 
                 </div>
 
+                <!-- Main Content -->
+
                 <div class="col-md-10 p-4">
 
-                    <h2 class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
 
-                        All Users
+                        <h2>All Users</h2>
 
-                    </h2>
+                        <a href="insertUser.jsp"
+                           class="btn btn-success">
+
+                            + Add User
+
+                        </a>
+
+                    </div>
+
+                    <!-- Search -->
+
+                    <div class="card shadow mb-4">
+
+                        <div class="card-body">
+
+                            <form action="SearchUserServlet"
+                                  method="get">
+
+                                <div class="row">
+
+                                    <div class="col-md-10">
+
+                                        <input
+                                            type="text"
+                                            name="keyword"
+                                            class="form-control"
+                                            placeholder="Search by Name, Email, Phone or Role"
+                                            value="${keyword}">
+
+                                    </div>
+
+                                    <div class="col-md-2">
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary w-100">
+
+                                            Search
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                    <!-- User Table -->
 
                     <div class="card shadow">
 
@@ -53,184 +109,130 @@
 
                         <div class="card-body">
 
-                            <table class="table table-bordered table-hover table-striped">
+                            <div class="table-responsive">
 
-                                <thead class="table-dark">
+                                <table class="table table-bordered table-hover table-striped align-middle">
 
-                                    <tr>
+                                    <thead class="table-dark">
 
-                                        <th>ID</th>
+                                        <tr>
 
-                                        <th>Full Name</th>
+                                            <th>ID</th>
+                                            <th>Full Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Gender</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th width="170">Action</th>
 
-                                        <th>Email</th>
+                                        </tr>
 
-                                        <th>Phone</th>
+                                    </thead>
 
-                                        <th>Gender</th>
+                                    <tbody>
 
-                                        <th>Role</th>
+                                        <%
 
-                                        <th>Status</th>
+                                            List<User> users = (List<User>) request.getAttribute("users");
 
-                                        <th width="180">
+                                            if (users != null && !users.isEmpty()) {
 
-                                            Action
+                                                for (User user : users) {
 
-                                        </th>
+                                        %>
 
-                                    </tr>
+                                        <tr>
 
-                                </thead>
+                                            <td><%= user.getId()%></td>
 
-                                <tbody>
+                                            <td><%= user.getFullname()%></td>
 
-                                    <%
+                                            <td><%= user.getEmail()%></td>
 
-                                        List<User> users
-                                                = (List<User>) request.getAttribute("users");
+                                            <td><%= user.getPhone()%></td>
 
-                                        if (users != null) {
+                                            <td><%= user.getGender()%></td>
 
-                                            for (User user : users) {
+                                            <td>
 
-                                    %>
+                                                <span class="badge bg-info text-dark">
 
-                                    <tr>
+                                                    <%= user.getRole()%>
 
-                                        <td>
+                                                </span>
 
-                                            <%=user.getId()%>
+                                            </td>
 
-                                        </td>
+                                            <td>
 
-                                        <td>
+                                                <% if (user.isStatus()) { %>
 
-                                            <%=user.getFullname()%>
+                                                <span class="badge bg-success">
 
-                                        </td>
+                                                    Active
 
-                                        <td>
+                                                </span>
 
-                                            <%=user.getEmail()%>
+                                                <% } else { %>
 
-                                        </td>
+                                                <span class="badge bg-danger">
 
-                                        <td>
+                                                    Inactive
 
-                                            <%=user.getPhone()%>
+                                                </span>
 
-                                        </td>
+                                                <% }%>
 
-                                        <td>
+                                            </td>
 
-                                            <%=user.getGender()%>
+                                            <td>
 
-                                        </td>
+                                                <a href="UpdateUserServlet?id=<%= user.getId()%>"
+                                                   class="btn btn-warning btn-sm">
 
-                                        <td>
+                                                    Edit
 
-                                            <%=user.getRole()%>
+                                                </a>
 
-                                        </td>
+                                                <a href="DeleteUserServlet?id=<%= user.getId()%>"
+                                                   class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('Are you sure you want to delete this user?');">
 
-                                        <td>
+                                                    Delete
 
-                                            <%
+                                                </a>
 
-                                                if (user.isStatus()) {
+                                            </td>
 
-                                            %>
+                                        </tr>
 
-                                            <span class="badge bg-success">
-
-                                                Active
-
-                                            </span>
-
-                                            <%} else {
-
-                                            %>
-
-                                            <span class="badge bg-danger">
-
-                                                Inactive
-
-                                            </span>
-
-                                            <%    }
-
-                                            %>
-
-                                        </td>
-
-                                        <td>
-
-                                            <a href="UpdateUserServlet?id=<%=user.getId()%>"
-                                               class="btn btn-warning btn-sm">
-
-                                                Edit
-
-                                            </a>
-
-                                            <a href="DeleteUserServlet?id=<%=user.getId()%>"
-                                               class="btn btn-danger btn-sm"
-                                               onclick="return confirm('Delete this user?')">
-
-                                                Delete
-
-                                            </a>
-
-                                        </td>
-
-                                    </tr>
-
-                                    <%
+                                        <%
 
                                             }
 
-                                        }
+                                        } else {
 
-                                    %>
+                                        %>
 
-                                </tbody>
+                                        <tr>
 
-                            </table>
-                            <div class="card mb-3 shadow">
+                                            <td colspan="8"
+                                                class="text-center text-muted">
 
-                                <div class="card-body">
+                                                No Users Found.
 
-                                    <form action="SearchUserServlet" method="get">
+                                            </td>
 
-                                        <div class="row">
+                                        </tr>
 
-                                            <div class="col-md-10">
+                                        <%                                        }
 
-                                                <input
-                                                    type="text"
-                                                    name="keyword"
-                                                    class="form-control"
-                                                    placeholder="Search by Name, Email, Phone or Role"
-                                                    value="${keyword}">
+                                        %>
 
-                                            </div>
+                                    </tbody>
 
-                                            <div class="col-md-2">
-
-                                                <button
-                                                    class="btn btn-primary w-100">
-
-                                                    Search
-
-                                                </button>
-
-                                            </div>
-
-                                        </div>
-
-                                    </form>
-
-                                </div>
+                                </table>
 
                             </div>
 
@@ -244,6 +246,10 @@
 
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <jsp:include page="footer.jsp"/>
+
     </body>
 
-</html><jsp:include page="footer.jsp"/>
+</html>

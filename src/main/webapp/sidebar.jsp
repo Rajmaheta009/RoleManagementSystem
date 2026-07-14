@@ -1,9 +1,8 @@
-<jsp:include page="navbar.jsp"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@psage import="model.user"%>
+<%@page import="model.User"%>
 
 <%
-    user user = (user) session.getAttribute("user");
+    User user = (User) session.getAttribute("user");
 
     if (user == null) {
         response.sendRedirect("login.jsp");
@@ -11,31 +10,46 @@
     }
 %>
 
-<div class="sidebar">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
 
-    <div class="sidebar-header">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet">
 
-        <h3>RMS</h3>
+<div class="bg-dark text-white vh-100 p-3 shadow">
 
-        <p>
-            Welcome,
-            <br>
-            <strong><%=user.getFullname()%></strong>
-        </p>
+    <div class="text-center mb-4">
+
+        <h3 class="fw-bold">
+
+            RMS
+
+        </h3>
+
+        <hr>
+
+        <h5>
+
+            <%= user.getFullname() %>
+
+        </h5>
 
         <span class="badge bg-warning text-dark">
-            <%=user.getRole()%>
+
+            <%= user.getRole() %>
+
         </span>
 
     </div>
 
-    <ul class="sidebar-menu">
+    <ul class="nav flex-column">
 
         <!-- Dashboard -->
 
-        <li>
+        <li class="nav-item mb-2">
 
-            <a href="dashboard.jsp">
+            <a href="DashboardServlet"
+               class="nav-link text-white">
 
                 <i class="bi bi-speedometer2"></i>
 
@@ -45,73 +59,14 @@
 
         </li>
 
-        <!-- ADMIN MENU -->
+        <!-- ADMIN -->
 
-        <%
-            if (user.getRole().equalsIgnoreCase("ADMIN")) {
-        %>
+        <% if(user.getRole().equalsIgnoreCase("ADMIN")) { %>
 
-        <li>
+        <li class="nav-item mb-2">
 
-            <a href="insertUser.jsp">
-
-                <i class="bi bi-person-plus-fill"></i>
-
-                Add User
-
-            </a>
-
-        </li>
-
-        <li>
-
-            <a href="DisplayUserServlet">
-
-                <i class="bi bi-people-fill"></i>
-
-                Display Users
-
-            </a>
-
-        </li>
-
-        <li>
-
-            <a href="DisplayUserServlet">
-
-                <i class="bi bi-pencil-square"></i>
-
-                Update User
-
-            </a>
-
-        </li>
-
-        <li>
-
-            <a href="DisplayUserServlet">
-
-                <i class="bi bi-trash-fill"></i>
-
-                Delete User
-
-            </a>
-
-        </li>
-
-        <%
-            }
-        %>
-
-        <!-- EMPLOYEE MENU -->
-
-        <%
-            if (user.getRole().equalsIgnoreCase("EMPLOYEE")) {
-        %>
-
-        <li>
-
-            <a href="insertUser.jsp">
+            <a href="insertUser.jsp"
+               class="nav-link text-white">
 
                 <i class="bi bi-person-plus-fill"></i>
 
@@ -121,43 +76,59 @@
 
         </li>
 
-        <li>
+        <li class="nav-item mb-2">
 
-            <a href="DisplayUserServlet">
+            <a href="DisplayUserServlet"
+               class="nav-link text-white">
 
                 <i class="bi bi-people-fill"></i>
 
-                Display Users
+                Manage Users
 
             </a>
 
         </li>
 
-        <li>
+        <% } %>
 
-            <a href="DisplayUserServlet">
+        <!-- EMPLOYEE -->
 
-                <i class="bi bi-pencil-square"></i>
+        <% if(user.getRole().equalsIgnoreCase("EMPLOYEE")) { %>
 
-                Update User
+        <li class="nav-item mb-2">
+
+            <a href="insertUser.jsp"
+               class="nav-link text-white">
+
+                <i class="bi bi-person-plus-fill"></i>
+
+                Add User
 
             </a>
 
         </li>
 
-        <%
-            }
-        %>
+        <li class="nav-item mb-2">
 
-        <!-- CLIENT MENU -->
+            <a href="DisplayUserServlet"
+               class="nav-link text-white">
 
-        <%
-            if (user.getRole().equalsIgnoreCase("CLIENT")) {
-        %>
+                <i class="bi bi-people-fill"></i>
 
-        <li>
+                View Users
 
-            <a href="profile.jsp">
+            </a>
+
+        </li>
+
+        <% } %>
+
+        <!-- COMMON -->
+
+        <li class="nav-item mb-2">
+
+            <a href="ProfileServlet"
+               class="nav-link text-white">
 
                 <i class="bi bi-person-circle"></i>
 
@@ -167,15 +138,23 @@
 
         </li>
 
-        <%
-            }
-        %>
+        <li class="nav-item mb-2">
 
-        <!-- COMMON -->
+            <a href="changePassword.jsp"
+               class="nav-link text-white">
 
-        <li>
+                <i class="bi bi-key-fill"></i>
 
-            <a href="LogoutServlet">
+                Change Password
+
+            </a>
+
+        </li>
+
+        <li class="nav-item mt-4">
+
+            <a href="LogoutServlet"
+               class="nav-link text-danger">
 
                 <i class="bi bi-box-arrow-right"></i>
 
@@ -188,4 +167,3 @@
     </ul>
 
 </div>
-        <jsp:include page="footer.jsp"/>
